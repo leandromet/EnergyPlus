@@ -1,0 +1,27 @@
+SIMULAÇÃO AUTOMÁTICA DE MODELOS IDF - PROCESSAMENTO PARALELO
+
+Para rodar modelos do EnergyPlus 6 (Nesta pasta todos os modelos simulados devem ser da versão 6), seguir as seguintes etapas:
+
+- Abrir a pasta ENTRADA;
+
+- Editar o arquivo  "arquivo_clima.txt" com o nome do arquivo climático
+que deverá ser considerado nas rodadas (permitido rodadas simultâneas 
+apenas com mesmo arquivo climático);
+
+- Copiar todos os arquivos IDF a serem simulados para a pasta ENTRADA;
+
+- O sistema verifica se há arquivos IDF na pasta ENTRADA a cada 60 segundos,
+se houver os arquivos são utilizados como parãmetro para simulações individuais
+do EnergyPlus, com o arquivo climático informado em "arquivo_clima.txt";
+
+- Os arquivos IDF simulados serão colocados na pasta RESULTADOS após o
+término da simulação, em uma pasta nomeada com o horário de início da 
+simulação e subpastas numeradas de 0 ao número de IDF rodados simultaneamente,
+os resultados de cada IDF estão na subpasta "Output" das pastas numeradas;
+
+- Aguardar a gravação de resultados antes de copiar novos IDF para a pasta
+ENTRADA, ou os modelos da rodada inicial podem ser rodados novamente na
+rodada seguinte. Este evento não altera resultados das simulações, apenas
+provoca a execução duplicada de modelos, utilizando tempo de processamento;
+
+- Para novas simulações, repetir as etapas anteriores.

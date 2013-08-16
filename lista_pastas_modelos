@@ -1,0 +1,15 @@
+#!/bin/bash
+
+sh /home/cte/SIMULA/ENERGY_7_2/*/ENTRADA/simula_energy_multi.sh&
+
+sh /home/cte/SIMULA/ENERGY_7_2/**/ENTRADA/simula_energy_multi.sh&
+
+sh /home/cte/SIMULA/ENERGY_7_2/***/ENTRADA/simula_energy_multi.sh&
+
+sh /home/cte/SIMULA/ENERGY_7_2/****/ENTRADA/simula_energy_multi.sh&
+
+sh /home/cte/SIMULA/ENERGY_7_2/*****/ENTRADA/simula_energy_multi.sh&
+
+sh /home/cte/SIMULA/ENERGY_7_2/******/ENTRADA/simula_energy_multi.sh
+exit 0
+ 

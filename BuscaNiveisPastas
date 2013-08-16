@@ -1,0 +1,17 @@
+@echo off
+setlocal
+set currentLevel=0
+set maxLevel=%2
+if not defined maxLevel set maxLevel=1
+ 
+:procFolder
+pushd %1 2>nul || exit /b
+if %currentLevel% lss %maxLevel% (
+  for /d %%F in (*) do echo %%~fF
+  for /d %%F in (*) do (
+    set /a currentLevel+=1
+    call :procFolder "%%F"
+    set /a currentLevel-=1
+  )
+)
+Popd

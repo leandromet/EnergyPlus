@@ -1,0 +1,69 @@
+#! /bin/sh -l
+
+#{
+export PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
+
+caminho="/home/cte/SIMULA/BIONDO"
+echo "Pasta raiz de execução: $caminho"
+cd $caminho/ENTRADA
+
+horasim=$(date)
+echo "$horasim"
+sleep 1
+ls *.idf > arquivos_idf
+datasim=$(date +%y%m%d%H%M%S)
+
+
+fileaq="$caminho/ENTRADA/arquivos_idf"
+if [ -s $fileaq ]
+ then
+  mkdir $caminho/ENTRADA/resultado_$datasim
+else
+  echo "
+!! Não foram encontrados arquivos IDF para simular
+"
+
+SUBJECT="Simulação $datasim"
+datasim=$(date)
+# Email To ?
+EMAIL="leandromet@gmail.com"
+# Email text/message
+EMAILMESSAGE="$caminho/ENTRADA/emailmessage.txt"
+echo "Simulação Concluida"> $EMAILMESSAGE
+echo "A simulação iniciada em $horasim foi concluída em $datasim. Os resultados estão na pasta //192.168.0.171/SIMULA/BIONDO/RESULTADOS">>$EMAILMESSAGE
+
+# send an email using /usr/bin/mailx
+ /usr/bin/mailx -s "$SUBJECT" -S smtp-use-starttls -S ssl-verify=ignore -S smtp=smtp://smtp.gmail.com:587 -S smtp-auth=login -S smtp-auth-user=leandromet@gmail.com -S smtp-auth-password=minhasenha -S from=cte "$EMAIL" < $EMAILMESSAGE
+exit
+
+  exit 1
+fi;
+
+
+echo "data $datasim"
+num=0
+
+chmod 777 *.idf
+
+for file in `cat arquivos_idf`;do 
+mkdir $caminho/ENTRADA/resultado_$datasim/$datasim-$num; mv $caminho/ENTRADA/$file $caminho/ENTRADA/resultado_$datasim/$datasim-$num/$file ;
+
+echo "A simular $file, resultado em $caminho/RESULTADOS/resultado_$datasim/$datasim-$num";  ((num++)); done
+
+echo "sh $caminho/ENTRADA/repw_processos.sh /usr/local/EnergyPlus-6-0-0/bin/runenergyplus" > arquivos_idf
+sort $caminho/ENTRADA/arquivo_clima.txt >> $caminho/ENTRADA/arquivos_idf
+find $caminho/ENTRADA/ -name *.idf > $caminho/ENTRADA/idf_plano
+sort  $caminho/ENTRADA/idf_plano >> $caminho/ENTRADA/arquivos_idf
+tr '\n' ' ' < $caminho/ENTRADA/arquivos_idf > $caminho/ENTRADA/idf_plano
+
+sh $caminho/ENTRADA/idf_plano
+
+tar -cvf $datasim.tar resultado_$datasim/
+gzip $datasim.tar
+
+mv $datasim.tar.gz $caminho/ZRESULTADOS_BACKUP/
+mv ./resultado_$datasim/ $caminho/RESULTADOS/
+
+
+exit 0
+#} > $caminho/saidas_modelos
